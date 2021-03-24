@@ -95,41 +95,41 @@ Note: The configurations here are only for Istio deployments, and do not scrape 
 
 The [Remotely Accessing Telemetry Addons](https://istio.io/latest/docs/tasks/observability/gateways/) shows how to configure Istio to expose and access the telemetry addons outside of a cluster. This is one way of exposing Telemetry Addons remotely. This approach requires setting up a domain. The examples demonstrates using AWS Route 53 registered domain.
 
-`bash
+```shellscript
 export INGRESS_DOMAIN=example.com
-`
+```
 
-`bash
+```shellscript
 cat addons/networking/prometheus.yaml | envsubst | kubectl apply -f -
 cat addons/networking/grafana.yaml | envsubst | kubectl apply -f -
 cat adddons/networking/kiali.yaml | envsubst | kubectl apply -f -
 cat addons/networking/tracing.yaml | envsubst | kubectl apply -f -
-`
+```
 
 #### Cleanup
-`bash 
+```shellscript 
 kubectl delete -f addons/networking/.
-`
+```
 
 ### Setting up ExternalDNS
 [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) makes Kubernetes resources discoverable via public DNS servers. It's not a DNS server itself, but merely configures other DNS providers accordingly—e.g. AWS Route 53. This sample describes how to setup ExternalDNS for usage within a Kubernetes cluster on AWS
 nd and ExternalDNS to use Istio Gateway source. 
 
-`bash
+```shellscript
 export INGRESS_DOMAIN=example.com
-`
+```
 
 Setup IAM policy to allow ExternalDNS to update Route53 Resource Record Sets and Hosted Zones.
 
-`bash
+```shellscript
 aws iam create-policy   \
   --policy-name external-dns-policy \
   --policy-document file://~/environment/istio-samples/addons/networking/external-dns/external-dns-policy.json
-`
+```
 
 Create IAM role.
 
-`bash
+```shellscript
 eksctl create iamserviceaccount \
     --name external-dns \
     --namespace default \
@@ -138,16 +138,16 @@ eksctl create iamserviceaccount \
     --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/external-dns-policy \
     --approve \
     --override-existing-serviceaccounts
-`
+```
 
 Deploy external DNS
-`bash
+```shellscript
 cat ~/environment/istio-samples/addons/networking/external-dns/external-dns.yaml | envsubst | kubectl apply -f -
-`
+```
 
 ### Cleanup
   
-`bash
+```shellscript
 
 kubectl delete -f ~/environment/istio-samples/addons/networking/external-dns/external-dns.yaml
 
@@ -158,4 +158,4 @@ eksctl delete iamserviceaccount \
     --wait
 
 aws iam delete-policy --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/external-dns-policy
-`
+```
