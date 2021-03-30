@@ -1,6 +1,6 @@
 # Telemetry Addons
 
-This directory contains sample deployments of various addons that integrate with Istio. While these applications
+This directory contains sample deployments of various addons/eks that integrate with Istio. While these applications
 are not a part of Istio, they are essential to making the most of Istio's observability features.
 
 The deployments here are meant to quickly get up and running, and are optimized for this case. As a result,
@@ -9,16 +9,16 @@ addon.
 
 ## Getting started
 
-To quickly deploy all addons:
+To quickly deploy all addons/eks:
 
 ```shell script
-kubectl apply -f addons
+kubectl apply -f addons/eks
 ```
 
-Alternatively, you can deploy individual addons:
+Alternatively, you can deploy individual addons/eks:
 
 ```shell script
-kubectl apply -f addons/prometheus.yaml
+kubectl apply -f addons/eks/prometheus.yaml
 ```
 
 ## Addons
@@ -74,7 +74,7 @@ For more information about integrating with Jaeger, please see the [Jaeger integ
 
 [Zipkin](https://zipkin.io/) is a distributed tracing system. It helps gather timing data needed to troubleshoot latency problems in service architectures. Features include both the collection and lookup of this data.
 
-Zipkin is an alternative to Jaeger and is not deployed by default. To replace Jaeger with Zipkin, run `kubectl apply -f samples/addons/extras/zipkin.yaml`.
+Zipkin is an alternative to Jaeger and is not deployed by default. To replace Jaeger with Zipkin, run `kubectl apply -f samples/addons/eks/extras/zipkin.yaml`.
 You may also want to remove the Jaeger deployment, which will not be used, with `kubectl delete deployment jaeger`, or avoid installing it
 to begin with by following the selective install steps in [Getting Started](#getting-started).
 
@@ -85,7 +85,7 @@ For more information about integrating with Zipkin, please see the [Zipkin integ
 The [Prometheus Operator](https://github.com/coreos/prometheus-operator) manages and operators a Prometheus instance.
 
 As an alternative to the standard Prometheus deployment, we provide a `ServiceMonitor` to monitor the Istio control plane and `PodMonitor`
-Envoy proxies. To use these, make sure you have the Prometheus operator deployed, then run `kubectl apply -f samples/addons/extras/prometheus-operator.yaml`.
+Envoy proxies. To use these, make sure you have the Prometheus operator deployed, then run `kubectl apply -f samples/addons/eks/extras/prometheus-operator.yaml`.
 
 Note: The example `PodMonitor` requires [metrics merging](https://istio.io/latest/docs/ops/integrations/prometheus/#option-1-metrics-merging) to be enabled. This is enabled by default.
 
@@ -93,22 +93,22 @@ Note: The configurations here are only for Istio deployments, and do not scrape 
 
 ### Remotely Accessing Telemetry Addons
 
-The [Remotely Accessing Telemetry Addons](https://istio.io/latest/docs/tasks/observability/gateways/) shows how to configure Istio to expose and access the telemetry addons outside of a cluster. This is one way of exposing Telemetry Addons remotely. This approach requires setting up a domain. The examples demonstrates using AWS Route 53 registered domain.
+The [Remotely Accessing Telemetry Addons](https://istio.io/latest/docs/tasks/observability/gateways/) shows how to configure Istio to expose and access the telemetry addons/eks outside of a cluster. This is one way of exposing Telemetry Addons remotely. This approach requires setting up a domain. The examples demonstrates using AWS Route 53 registered domain.
 
 ```shellscript
 export INGRESS_DOMAIN=example.com
 ```
 
 ```shellscript
-cat addons/networking/prometheus.yaml | envsubst | kubectl apply -f -
-cat addons/networking/grafana.yaml | envsubst | kubectl apply -f -
+cat addons/eks/networking/prometheus.yaml | envsubst | kubectl apply -f -
+cat addons/eks/networking/grafana.yaml | envsubst | kubectl apply -f -
 cat adddons/networking/kiali.yaml | envsubst | kubectl apply -f -
-cat addons/networking/tracing.yaml | envsubst | kubectl apply -f -
+cat addons/eks/networking/tracing.yaml | envsubst | kubectl apply -f -
 ```
 
 #### Cleanup
 ```shellscript 
-kubectl delete -f addons/networking/.
+kubectl delete -f addons/eks/networking/.
 ```
 
 ### Setting up ExternalDNS
@@ -124,7 +124,7 @@ Setup IAM policy to allow ExternalDNS to update Route53 Resource Record Sets and
 ```shellscript
 aws iam create-policy   \
   --policy-name external-dns-policy \
-  --policy-document file://~/environment/istio-samples/addons/networking/external-dns/external-dns-policy.json
+  --policy-document file://~/environment/istio-samples/addons/eks/networking/external-dns/external-dns-policy.json
 ```
 
 Create IAM role.
@@ -142,14 +142,14 @@ eksctl create iamserviceaccount \
 
 Deploy external DNS
 ```shellscript
-cat ~/environment/istio-samples/addons/networking/external-dns/external-dns.yaml | envsubst | kubectl apply -f -
+cat ~/environment/istio-samples/addons/eks/networking/external-dns/external-dns.yaml | envsubst | kubectl apply -f -
 ```
 
 ### Cleanup
   
 ```shellscript
 
-kubectl delete -f ~/environment/istio-samples/addons/networking/external-dns/external-dns.yaml
+kubectl delete -f ~/environment/istio-samples/addons/eks/networking/external-dns/external-dns.yaml
 
 eksctl delete iamserviceaccount \
     --name external-dns \
