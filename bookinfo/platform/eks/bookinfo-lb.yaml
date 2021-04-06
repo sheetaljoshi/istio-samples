@@ -332,8 +332,10 @@ metadata:
     service: productpage
 spec:
   ports:
-  - port: 9080
+  - port: 80
     name: http
+    targetPort: 9080
+  type: LoadBalancer
   selector:
     app: productpage
 ---

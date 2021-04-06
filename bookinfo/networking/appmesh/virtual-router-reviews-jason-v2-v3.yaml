@@ -1,0 +1,40 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  namespace: appmesh-bookinfo
+  name: reviews-router
+spec:
+  awsName: reviews-router
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  routes:
+    - name: reviews-json-route
+      httpRoute:
+        match:
+          prefix: /
+          headers:
+            - name: end-user
+              match:
+                exact: jason
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: reviews-v1
+              weight: 1
+    - name: reviews-route
+      httpRoute:
+        match:
+          prefix: /
+          headers:
+            - name: end-user
+              invert: true
+              match:
+                exact: jason
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: reviews-v3
+              weight: 1

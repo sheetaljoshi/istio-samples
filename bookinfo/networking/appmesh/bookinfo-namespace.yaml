@@ -1,0 +1,10 @@
+##################################################################################################
+# Namespace
+##################################################################################################
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: appmesh-bookinfo
+  labels:
+    mesh: bookinfo-mesh
+    appmesh.k8s.aws/sidecarInjectorWebhook: enabled

@@ -1,0 +1,49 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: productpage
+  namespace: appmesh-bookinfo
+spec:
+  awsName: productpage
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: productpage-v1
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: details
+  namespace: appmesh-bookinfo
+spec:
+  awsName: details
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: details-v1
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: ratings
+  namespace: appmesh-bookinfo
+spec:
+  awsName: ratings
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: ratings-v1
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: reviews
+  namespace: appmesh-bookinfo
+spec:
+  awsName: reviews
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: reviews-router
+---

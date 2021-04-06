@@ -1,0 +1,12 @@
+##################################################################################################
+# Namespace
+##################################################################################################
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: Mesh
+metadata:
+  name: bookinfo-mesh
+spec:
+  namespaceSelector:
+    matchLabels:
+      mesh: bookinfo-mesh
+---

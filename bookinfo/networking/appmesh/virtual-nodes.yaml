@@ -1,0 +1,155 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: details-v1
+  namespace: appmesh-bookinfo
+spec:
+  awsNode: details-v1
+  podSelector:
+    matchLabels:
+      app: details
+      version: v1
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  serviceDiscovery:
+    dns:
+      hostname: details
+  logging:
+    accessLog:
+      file:
+        path: /dev/stdout
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: ratings-v1
+  namespace: appmesh-bookinfo
+spec:
+  awsNode: ratings-v1
+  podSelector:
+    matchLabels:
+      app: ratings
+      version: v1
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  serviceDiscovery:
+    dns:
+      hostname: ratings
+  logging:
+    accessLog:
+      file:
+        path: /dev/stdout
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: reviews-v1
+  namespace: appmesh-bookinfo
+spec:
+  awsNode: reviews-v1
+  podSelector:
+    matchLabels:
+      app: reviews
+      version: v1
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  serviceDiscovery:
+    dns:
+      hostname: reviews-v1
+  logging:
+    accessLog:
+      file:
+        path: /dev/stdout
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: reviews-v2
+  namespace: appmesh-bookinfo
+spec:
+  awsNode: reviews-v2
+  podSelector:
+    matchLabels:
+      app: reviews
+      version: v2
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: ratings
+  serviceDiscovery:
+    dns:
+      hostname: reviews-v2
+  logging:
+    accessLog:
+      file:
+        path: /dev/stdout
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: reviews-v3
+  namespace: appmesh-bookinfo
+spec:
+  awsNode: reviews-v3
+  podSelector:
+    matchLabels:
+      app: reviews
+      version: v3
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: ratings
+  serviceDiscovery:
+    dns:
+      hostname: reviews-v3
+  logging:
+    accessLog:
+      file:
+        path: /dev/stdout
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: productpage-v1
+  namespace: appmesh-bookinfo
+spec:
+  awsNode: productpage-v1
+  podSelector:
+    matchLabels:
+      app: productpage
+      version: v1
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: details
+    - virtualService:
+        virtualServiceRef: 
+          name: reviews
+    - virtualService:
+        virtualServiceRef: 
+          name: ratings
+  serviceDiscovery:
+    dns:
+      hostname: productpage
+  logging:
+    accessLog:
+      file:
+        path: /dev/stdout

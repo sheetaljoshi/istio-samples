@@ -1,0 +1,9 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: dns-test
+  namespace: appmesh-bookinfo
+spec:
+  podSelector:
+    matchLabels:
+      app: dns-test
